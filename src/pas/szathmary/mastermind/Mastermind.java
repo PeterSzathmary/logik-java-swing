@@ -4,11 +4,13 @@ import pas.szathmary.mastermind.GUI.GUI;
 import pas.szathmary.mastermind.buttons.InputButton;
 import pas.szathmary.mastermind.buttons.OutputButton;
 
-import java.awt.event.*;
 import javax.swing.*;
-import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Random;
 
 // Mastermind GUI and game logic
 public class Mastermind implements ActionListener
@@ -75,6 +77,8 @@ public class Mastermind implements ActionListener
         // Init counter.
         counter = 9;
 
+        LinkedHashSet<Integer> randomNumbers = new LinkedHashSet<>();
+
         // Init key.
         for (int i = 0; i < 4; i++)
         {
@@ -82,7 +86,13 @@ public class Mastermind implements ActionListener
             if (mode == 0)
             {
                 key[i].setVis(false);
-                key[i].setCurrentColor((rand.nextInt(6) + 1));
+
+                int r;
+                do
+                {
+                    r = rand.nextInt(6)+1;
+                } while (randomNumbers.add(r));
+                key[i].setCurrentColor(randomNumbers.stream().toList().get(i));
             }
             else
             {
@@ -360,12 +370,6 @@ public class Mastermind implements ActionListener
     // Show the clue for the current guess.
     public boolean returnClue()
     {
-        // Exact matches.
-        int exactMatch = 0;
-
-        // Color matches.
-        int colorMatch = 0;
-
         // Current button.
         int result = 0;
 
